@@ -26,7 +26,7 @@ jobs:
         run: yarn test
       - name: e2e tests
         uses: cypress-io/github-action@v2
-        if: ${{ github.event_name == 'push'  }}
+        if: ${{ !contains(join(github.event.commits.*.message), '#skip') && github.event_name == 'push' }}
         with:
           command: yarn test:e2e
           start: yarn start-prod
