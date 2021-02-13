@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.10.9
-        if: ${{ github.event_name == 'push'  }}
+        if: ${{ !contains(join(github.event.commits.*.message), '#skip') && github.event_name == 'push' }}
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'poke-weeb'
@@ -24,6 +24,7 @@ jobs:
           checkstring: 'ok'
           rollbackonhealthcheckfailed: true
       - name: Bump version and push tag
+        if: ${{ !contains(join(github.event.commits.*.message), '#skip') && github.event_name == 'push' }}
         uses: anothrNick/github-tag-action@1.33.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
